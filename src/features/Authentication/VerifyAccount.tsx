@@ -11,7 +11,7 @@ import {
   SubHeading,
 } from "../../components";
 
-const ForgotPassword = () => {
+const VerifyAccount = () => {
   return (
     <Box
       sx={{
@@ -29,19 +29,19 @@ const ForgotPassword = () => {
         }}
       >
         <Heading align="center">
-          Forgot Password 🔐
+          Verify Your Account ✉️
         </Heading>
 
         <SubHeading
           align="center"
           sx={{ mb: 4 }}
         >
-          Enter your email and we'll send you a link to reset your password.
+          We've sent a verification code to your email address. Enter it below to verify your account.
         </SubHeading>
 
         <Formik
           initialValues={{
-            email: "",
+            verificationCode: "",
           }}
           onSubmit={(values) => {
             console.log(values);
@@ -51,10 +51,13 @@ const ForgotPassword = () => {
             <Form onSubmit={handleSubmit}>
               <Stack spacing={3}>
                 <Input
-                  name="email"
-                  label="Email"
-                  type="email"
-                  autoComplete="email"
+                  name="verificationCode"
+                  label="Verification Code"
+                  placeholder="Enter verification code"
+                  inputProps={{
+                    maxLength: 6,
+                    inputMode: "numeric",
+                  }}
                 />
 
                 <Button
@@ -62,16 +65,36 @@ const ForgotPassword = () => {
                   variant="contained"
                   fullWidth
                 >
-                  Send Reset Link
+                  Verify Account
                 </Button>
 
                 <Typography
                   variant="body2"
                   align="center"
                 >
-                  Remember your password?{" "}
+                  Didn't receive the code?{" "}
+                  <Button
+                    type="button"
+                    variant="text"
+                    sx={{
+                      minWidth: "auto",
+                      p: 0,
+                      textTransform: "none",
+                    }}
+                    onClick={() => {
+                      console.log("Resend verification code");
+                    }}
+                  >
+                    Resend Code
+                  </Button>
+                </Typography>
+
+                <Typography
+                  variant="body2"
+                  align="center"
+                >
                   <Link to="/auth/login">
-                    Login
+                    Back to Login
                   </Link>
                 </Typography>
               </Stack>
@@ -83,4 +106,4 @@ const ForgotPassword = () => {
   );
 };
 
-export default ForgotPassword;
+export default VerifyAccount;

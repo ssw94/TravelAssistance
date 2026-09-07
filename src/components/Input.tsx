@@ -5,11 +5,9 @@ export const Input = styled(TextField)(({ theme }) => ({
   "& .MuiOutlinedInput-root": {
     borderRadius: 14,
     transition: ".2s",
-
     "&:hover fieldset": {
       borderColor: theme.palette.primary.main,
     },
-
     "&.Mui-focused": {
       transform: "scale(1.01)",
     },

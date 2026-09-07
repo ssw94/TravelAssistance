@@ -68,6 +68,10 @@ const Login = () => {
                   <Link to="/auth/register">
                     Register
                   </Link>
+                  <br/>
+                  <Link to="/auth/forgot-password">
+                    Forgot Password
+                  </Link>
                 </Typography>
               </Stack>
             </Form>
