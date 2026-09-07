@@ -54,10 +54,7 @@ const VerifyAccount = () => {
                   name="verificationCode"
                   label="Verification Code"
                   placeholder="Enter verification code"
-                  inputProps={{
-                    maxLength: 6,
-                    inputMode: "numeric",
-                  }}
+
                 />
 
                 <Button
