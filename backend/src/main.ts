@@ -2,6 +2,9 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, Logger } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
+import { existsSync } from 'fs';
 
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
@@ -11,7 +14,7 @@ import { SeedService } from './database/seed.service';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get(ConfigService);
 
   // Global prefix
@@ -74,6 +77,22 @@ async function bootstrap() {
       persistAuthorization: true,
     },
   });
+
+  // Serve Frontend SPA if client directory exists
+  const clientPath = join(__dirname, '..', 'client');
+  if (existsSync(clientPath)) {
+    app.useStaticAssets(clientPath, {
+      index: false,
+    });
+    const expressApp = app.getHttpAdapter().getInstance();
+    expressApp.get('*', (req: any, res: any, next: any) => {
+      if (req.path.startsWith('/api')) {
+        return next();
+      }
+      return res.sendFile(join(clientPath, 'index.html'));
+    });
+    logger.log(`📱 Frontend client static assets registered from: ${clientPath}`);
+  }
 
   // Auto-seed initial data in development / initial run if database is fresh
   try {
