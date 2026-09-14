@@ -25,32 +25,51 @@ import { Notification } from '../notifications/entities/notification.entity';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
         const dbConfig = config.get('database');
-        return {
+        const entities = [
+          User,
+          UserProfile,
+          RefreshToken,
+          Destination,
+          DestinationImage,
+          DestinationActivity,
+          SavedDestination,
+          Trip,
+          TripMember,
+          ItineraryDay,
+          ItineraryItem,
+          Booking,
+          Expense,
+          Review,
+          Notification,
+        ];
+
+        const baseConfig: any = {
           type: 'postgres',
+          entities,
+          synchronize: dbConfig.synchronize,
+          logging: dbConfig.logging,
+        };
+
+        if (dbConfig.ssl) {
+          baseConfig.ssl = {
+            rejectUnauthorized: false,
+          };
+        }
+
+        if (dbConfig.url) {
+          return {
+            ...baseConfig,
+            url: dbConfig.url,
+          };
+        }
+
+        return {
+          ...baseConfig,
           host: dbConfig.host,
           port: dbConfig.port,
           username: dbConfig.username,
           password: dbConfig.password,
           database: dbConfig.database,
-          entities: [
-            User,
-            UserProfile,
-            RefreshToken,
-            Destination,
-            DestinationImage,
-            DestinationActivity,
-            SavedDestination,
-            Trip,
-            TripMember,
-            ItineraryDay,
-            ItineraryItem,
-            Booking,
-            Expense,
-            Review,
-            Notification,
-          ],
-          synchronize: dbConfig.synchronize,
-          logging: dbConfig.logging,
         };
       },
     }),

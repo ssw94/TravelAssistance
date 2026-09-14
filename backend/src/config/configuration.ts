@@ -2,11 +2,17 @@ export default () => ({
   port: parseInt(process.env.PORT || '5000', 10),
   nodeEnv: process.env.NODE_ENV || 'development',
   database: {
+    url: process.env.DATABASE_URL || undefined,
     host: process.env.DB_HOST || 'localhost',
     port: parseInt(process.env.DB_PORT || '5432', 10),
     username: process.env.DB_USERNAME || 'postgres',
     password: process.env.DB_PASSWORD || 'postgres',
     database: process.env.DB_NAME || 'travel_assistance',
+    ssl:
+      process.env.DB_SSL === 'true' ||
+      (process.env.NODE_ENV === 'production' &&
+        !!process.env.DATABASE_URL &&
+        !process.env.DATABASE_URL.includes('localhost')),
     synchronize: process.env.DB_SYNCHRONIZE === 'true' || process.env.NODE_ENV !== 'production',
     logging: process.env.DB_LOGGING === 'true',
   },

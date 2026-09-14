@@ -84,9 +84,9 @@ async function bootstrap() {
   }
 
   const port = configService.get<number>('port') || 5000;
-  await app.listen(port);
-  logger.log(`🚀 Travel Assistance Backend is running on: http://localhost:${port}/api`);
-  logger.log(`📚 Swagger OpenAPI Documentation available at: http://localhost:${port}/api/docs`);
+  await app.listen(port, '0.0.0.0');
+  logger.log(`🚀 Travel Assistance Backend is running on: http://0.0.0.0:${port}/api`);
+  logger.log(`📚 Swagger OpenAPI Documentation available at: http://0.0.0.0:${port}/api/docs`);
 }
 
 bootstrap();
