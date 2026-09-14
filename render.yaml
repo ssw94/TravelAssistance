@@ -1,0 +1,60 @@
+services:
+  # Backend NestJS Web Service
+  - type: web
+    name: travel-assistance-backend
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: starter
+    region: oregon
+    healthCheckPath: /api/destinations
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DB_HOST
+        fromDatabase:
+          name: travel-postgres-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: travel-postgres-db
+          property: port
+      - key: DB_USERNAME
+        fromDatabase:
+          name: travel-postgres-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: travel-postgres-db
+          property: password
+      - key: DB_NAME
+        fromDatabase:
+          name: travel-postgres-db
+          property: database
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: CORS_ORIGIN
+        value: https://travel-assistance-frontend.onrender.com
+
+  # Frontend Nginx Web Service
+  - type: web
+    name: travel-assistance-frontend
+    env: docker
+    dockerfilePath: ./frontend/Dockerfile
+    dockerContext: ./frontend
+    plan: starter
+    region: oregon
+    envVars:
+      - key: VITE_API_URL
+        value: https://travel-assistance-backend.onrender.com/api
+
+databases:
+  - name: travel-postgres-db
+    databaseName: travel_assistance
+    user: travel_user
+    plan: free
+    region: oregon
