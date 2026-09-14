@@ -47,11 +47,8 @@ export class ExpensesService {
       .createQueryBuilder('expense')
       .leftJoinAndSelect('expense.trip', 'trip')
       .leftJoinAndSelect('expense.user', 'user')
+      .where('expense.user.id = :userId', { userId: user.id })
       .orderBy('expense.date', 'DESC');
-
-    if (user.role !== UserRole.ADMIN) {
-      query.where('expense.user.id = :userId', { userId: user.id });
-    }
 
     if (tripId) {
       query.andWhere('expense.trip.id = :tripId', { tripId });

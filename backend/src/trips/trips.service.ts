@@ -85,13 +85,6 @@ export class TripsService {
   }
 
   async findAll(user: User): Promise<Trip[]> {
-    if (user.role === UserRole.ADMIN) {
-      return this.tripRepository.find({
-        relations: ['user', 'itineraryDays', 'bookings', 'expenses'],
-        order: { createdAt: 'DESC' },
-      });
-    }
-
     return this.tripRepository
       .createQueryBuilder('trip')
       .leftJoinAndSelect('trip.user', 'user')

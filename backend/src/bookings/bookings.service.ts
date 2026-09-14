@@ -47,11 +47,8 @@ export class BookingsService {
       .createQueryBuilder('booking')
       .leftJoinAndSelect('booking.trip', 'trip')
       .leftJoinAndSelect('booking.user', 'user')
+      .where('booking.user.id = :userId', { userId: user.id })
       .orderBy('booking.startDateTime', 'ASC');
-
-    if (user.role !== UserRole.ADMIN) {
-      query.where('booking.user.id = :userId', { userId: user.id });
-    }
 
     if (tripId) {
       query.andWhere('booking.trip.id = :tripId', { tripId });
