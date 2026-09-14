@@ -1,5 +1,5 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { join } from 'path';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 import configuration from './config/configuration';
 import { DatabaseModule } from './database/database.module';
@@ -21,6 +21,13 @@ import { SeedModule } from './database/seed.module';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'client'),
+      exclude: ['/api*'],
+      serveStaticOptions: {
+        fallthrough: true,
+      },
     }),
     DatabaseModule,
     AuthModule,
