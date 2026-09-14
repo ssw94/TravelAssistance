@@ -81,15 +81,12 @@ async function bootstrap() {
   // Serve Frontend SPA if client directory exists
   const clientPath = join(__dirname, '..', 'client');
   if (existsSync(clientPath)) {
-    app.useStaticAssets(clientPath, {
-      index: false,
-    });
-    const expressApp = app.getHttpAdapter().getInstance();
-    expressApp.get('*', (req: any, res: any, next: any) => {
-      if (req.path.startsWith('/api')) {
-        return next();
+    app.useStaticAssets(clientPath);
+    app.use((req: any, res: any, next: any) => {
+      if (req.method === 'GET' && !req.path.startsWith('/api')) {
+        return res.sendFile(join(clientPath, 'index.html'));
       }
-      return res.sendFile(join(clientPath, 'index.html'));
+      next();
     });
     logger.log(`📱 Frontend client static assets registered from: ${clientPath}`);
   }
