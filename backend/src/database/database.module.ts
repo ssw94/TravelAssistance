@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, Logger } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
@@ -25,6 +25,8 @@ import { Notification } from '../notifications/entities/notification.entity';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
         const dbConfig = config.get('database');
+        const logger = new Logger('DatabaseModule');
+
         const entities = [
           User,
           UserProfile,
@@ -57,11 +59,16 @@ import { Notification } from '../notifications/entities/notification.entity';
         }
 
         if (dbConfig.url) {
+          logger.log(`🔗 Connecting to PostgreSQL using DATABASE_URL (SSL: ${!!dbConfig.ssl})`);
           return {
             ...baseConfig,
             url: dbConfig.url,
           };
         }
+
+        logger.log(
+          `🔗 Connecting to PostgreSQL at ${dbConfig.host}:${dbConfig.port}/${dbConfig.database} (SSL: ${!!dbConfig.ssl})`,
+        );
 
         return {
           ...baseConfig,
